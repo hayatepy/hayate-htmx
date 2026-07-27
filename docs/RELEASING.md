@@ -1,4 +1,4 @@
-# Release 0.1
+# Releasing hayate-htmx
 
 The release workflow builds from a tag, verifies version consistency, runs the
 test and audit gates, builds wheel and source archives, generates an SPDX JSON
@@ -20,7 +20,8 @@ reporting.
 ## Release checklist
 
 1. Confirm `CHANGELOG.md` describes the release.
-2. Confirm `pyproject.toml` and `hayate_htmx.__version__` are both `0.1.0`.
+2. Confirm `pyproject.toml`, `hayate_htmx.__version__`, and `uv.lock` all
+   contain the intended version.
 3. Run:
 
    ```sh
@@ -36,7 +37,7 @@ reporting.
 
 4. Run the Chromium smoke path documented in the golden example.
 5. Merge only with all blocking GitHub checks green.
-6. Create and push an annotated `v0.1.0` tag from the reviewed merge commit.
+6. Create and push an annotated `v<version>` tag from the reviewed merge commit.
    Do not move or reuse a published tag.
 7. Verify the release workflow's PyPI publish, attestations, SPDX SBOM, and
    GitHub release assets.

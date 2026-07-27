@@ -4,6 +4,8 @@ All notable changes to hayate-htmx are documented here.
 
 ## Unreleased
 
+## [0.2.0] - 2026-07-27
+
 ### Added
 
 - Add an engine-neutral, generic `Renderer[ViewT]` boundary while preserving
