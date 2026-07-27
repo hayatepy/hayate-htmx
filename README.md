@@ -126,23 +126,74 @@ adaptive route: that micro-cache currently keys only by URL and does not
 interpret `Vary`. Use an HTTP cache that honors `Vary`, disable that middleware
 for adaptive routes, or expose distinct URLs.
 
+## Rendering engines
+
+Jinja2 remains the batteries-included default. Optional first-party adapters
+use the same typed page/fragment selection contract:
+
+| Renderer | Install | View | Status |
+| --- | --- | --- | --- |
+| Jinja2 | `hayate-htmx` | template name | stable default |
+| htpy | `hayate-htmx[htpy]` | typed renderable or component factory | supported |
+| Jx | `hayate-htmx[jx]` | catalog component name | supported |
+| tdom | `hayate-htmx[tdom]` | t-string template or factory | experimental, Python 3.14+ |
+
+The optional modules are lazy boundaries. Importing `hayate_htmx` never
+imports htpy, Jx, or tdom, and the tdom adapter does not raise the package's
+Python 3.12 minimum.
+
+```python
+from hayate_htmx import HtmxTemplates
+from hayate_htmx.htpy import HtpyRenderer
+
+views = HtmxTemplates(HtpyRenderer())
+```
+
+```python
+from hayate_htmx import HtmxTemplates
+from hayate_htmx.jx import JxRenderer
+
+views = HtmxTemplates(JxRenderer("components"))
+```
+
+On Python 3.14, tdom component factories return a t-string `Template`:
+
+```python
+from hayate_htmx import HtmxTemplates
+from hayate_htmx.tdom import TdomRenderer
+
+views = HtmxTemplates(TdomRenderer())
+```
+
+htpy consumes async component children through `aiter_chunks()`. Jx reuses one
+`Catalog`, including its props, slots, and asset graph. Every adapter preserves
+its renderer's safe escaping defaults; trusted/raw markup remains an explicit
+renderer-native operation. See [renderer compatibility](docs/RENDERERS.md)
+before choosing a Workers deployment path.
+
 ## Custom renderers
 
-The htmx selection layer depends only on the async `TemplateRenderer` protocol:
+The htmx selection layer depends on the async generic `Renderer[ViewT]`
+protocol. The same view type is required for both page and fragment targets:
 
 ```python
 from collections.abc import Mapping
 
+from hayate_htmx import HtmxTemplates, Renderer
+
 class MyRenderer:
     async def render(
         self,
-        template_name: str,
+        view: str,
         context: Mapping[str, object],
-    ) -> str:
-        ...
+    ) -> str: ...
 
-templates = HtmxTemplates(MyRenderer())
+renderer: Renderer[str] = MyRenderer()
+templates = HtmxTemplates(renderer)
 ```
+
+`TemplateRenderer` remains available as the compatible specialization for
+string template names during the 0.x transition.
 
 ## Handler integration
 

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Iterable, Mapping
-from typing import Literal, Protocol
+from typing import Literal, Protocol, TypeVar
 
 from hayate import Context, Headers, Response
 
@@ -12,6 +12,7 @@ from .request import HtmxRequest
 type RenderMode = Literal["page", "fragment"]
 type ResponseHeaders = Headers | Mapping[str, str] | Iterable[tuple[str, str]] | None
 
+_RendererViewT = TypeVar("_RendererViewT", contravariant=True)
 _VARY_FIELDS = (
     "HX-Request",
     "HX-History-Restore-Request",
@@ -19,16 +20,20 @@ _VARY_FIELDS = (
 )
 
 
-class TemplateRenderer(Protocol):
-    """Engine-independent asynchronous template renderer."""
+class Renderer(Protocol[_RendererViewT]):
+    """Engine-independent asynchronous renderer for one view type."""
 
     async def render(
         self,
-        template_name: str,
+        view: _RendererViewT,
         context: Mapping[str, object],
     ) -> str:
-        """Render one named template."""
+        """Render one view using the supplied values."""
         ...
+
+
+class TemplateRenderer(Renderer[str], Protocol):
+    """Backward-compatible renderer protocol for string template names."""
 
 
 def select_render_mode(request: HtmxRequest) -> RenderMode:
@@ -61,26 +66,26 @@ def append_htmx_vary(response: Response) -> Response:
     return response
 
 
-class HtmxTemplates:
+class HtmxTemplates[ViewT]:
     """Render one route as a complete page or an explicitly named fragment."""
 
-    def __init__(self, renderer: TemplateRenderer) -> None:
+    def __init__(self, renderer: Renderer[ViewT]) -> None:
         self.renderer = renderer
 
     async def render(
         self,
         context: Context,
         *,
-        page: str,
-        fragment: str,
+        page: ViewT,
+        fragment: ViewT,
         values: Mapping[str, object] | None = None,
         status: int = 200,
         headers: ResponseHeaders = None,
     ) -> Response:
         """Render the representation selected from the request metadata."""
-        if not page:
+        if isinstance(page, str) and not page:
             raise ValueError("page template name must not be empty")
-        if not fragment:
+        if isinstance(fragment, str) and not fragment:
             raise ValueError("fragment template name must not be empty")
 
         mode = select_render_mode(HtmxRequest.from_context(context))

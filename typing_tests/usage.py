@@ -6,10 +6,13 @@ from hayate_htmx import (
     HtmxRequest,
     HtmxTemplates,
     JinjaRenderer,
+    Renderer,
     RequestType,
     TemplateRenderer,
     with_htmx,
 )
+from hayate_htmx.htpy import HtpyRenderer, HtpyView
+from hayate_htmx.jx import JxRenderer
 
 hx = HtmxRequest(Request("https://example.test/"))
 
@@ -22,7 +25,11 @@ assert_type(
 )
 
 renderer: TemplateRenderer = JinjaRenderer("templates")
-templates = HtmxTemplates(renderer)
+templates: HtmxTemplates[str] = HtmxTemplates(renderer)
+htpy_renderer: Renderer[HtpyView] = HtpyRenderer()
+htpy_templates: HtmxTemplates[HtpyView] = HtmxTemplates(htpy_renderer)
+jx_renderer: Renderer[str] = JxRenderer("components")
+jx_templates: HtmxTemplates[str] = HtmxTemplates(jx_renderer)
 
 
 async def render_todos(c: Context) -> Response:
