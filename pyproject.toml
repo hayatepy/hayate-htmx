@@ -1,0 +1,53 @@
+[build-system]
+requires = ["uv_build>=0.9,<1"]
+build-backend = "uv_build"
+
+[project]
+name = "hayate-htmx"
+version = "0.1.0"
+description = "Typed htmx request and response integration for Hayate"
+readme = "README.md"
+requires-python = ">=3.12"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Yusuke Hayashi" }]
+keywords = ["hayate", "htmx", "hypermedia", "html"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Typing :: Typed",
+  "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+]
+dependencies = ["hayate>=0.12.0"]
+
+[project.urls]
+Repository = "https://github.com/hayatepy/hayate-htmx"
+Documentation = "https://github.com/hayatepy/hayate-htmx#readme"
+Changelog = "https://github.com/hayatepy/hayate-htmx/blob/main/CHANGELOG.md"
+
+[dependency-groups]
+dev = [
+  "mypy>=1.18",
+  "pytest>=8.3",
+  "pytest-asyncio>=0.25",
+  "ruff>=0.9",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src", "tests", "typing_tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM", "RUF"]
