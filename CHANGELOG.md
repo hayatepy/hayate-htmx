@@ -14,3 +14,10 @@ All notable changes to hayate-htmx are documented here.
 - Add a Jinja renderer with HTML autoescaping enabled by default.
 - Add representation-safe `Vary` composition and normalized missing-template
   errors.
+- Add an identity-scoped full-stack TODO reference app with accessible CRUD,
+  history navigation, and SSE token streaming.
+- Vendor and integrity-pin the production htmx 2.0.10 browser asset.
+- Add Chromium smoke tests, Hayate compatibility checks, an observational
+  htmx 4 lane, release attestations, and an SPDX SBOM gate.
+- Add authentication, CSRF, compatibility, asset, security, and release
+  guidance.

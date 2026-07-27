@@ -1,0 +1,41 @@
+name: Compatibility
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: "17 4 * * 1"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: compatibility-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  hayate:
+    name: Hayate ${{ matrix.hayate }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        hayate: ["0.12.0", "latest"]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          python-version: "3.12"
+      - run: uv sync --locked
+      - name: Install the selected Hayate release
+        run: |
+          if [ "${{ matrix.hayate }}" = "latest" ]; then
+            uv pip install --python .venv/bin/python --upgrade hayate
+          else
+            uv pip install --python .venv/bin/python "hayate==${{ matrix.hayate }}"
+          fi
+      - run: uv run --no-sync pytest -q

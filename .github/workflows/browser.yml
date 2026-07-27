@@ -1,0 +1,58 @@
+name: Browser
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: browser-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  htmx-2:
+    name: Golden app on htmx 2
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          python-version: "3.12"
+      - run: uv sync --locked
+      - run: uv run playwright install --with-deps chromium
+      - run: uv run pytest -m browser -q
+        env:
+          HAYATE_HTMX_BROWSER_TESTS: "1"
+
+  htmx-4-observation:
+    name: Golden app on htmx 4 beta (observational)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          python-version: "3.12"
+      - run: uv sync --locked
+      - name: Substitute the pinned htmx 4 beta asset
+        run: |
+          curl --fail --silent --show-error --location \
+            https://cdn.jsdelivr.net/npm/htmx.org@4.0.0-beta5 \
+            --output examples/golden/static/vendor/htmx-2.0.10.min.js
+          actual="$(openssl dgst -sha384 -binary \
+            examples/golden/static/vendor/htmx-2.0.10.min.js | openssl base64 -A)"
+          test "$actual" = "5dnhUXCt1hXGvYrjAnKwgNX3I8xtIJiW6eIHIbeo7oWyXv2XpWYC/rl+ZiWfuYO5"
+      - run: uv run playwright install --with-deps chromium
+      - run: uv run pytest -m browser -q
+        env:
+          HAYATE_HTMX_BROWSER_TESTS: "1"
+          HAYATE_HTMX_EXPECTED_VERSION: "4.0.0-beta5"

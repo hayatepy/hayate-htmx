@@ -25,6 +25,32 @@ uv add hayate-htmx
 This installs Jinja as the batteries-included HTML renderer. Hayate itself
 remains template-engine independent.
 
+## Golden full-stack application
+
+[`examples/golden`](examples/golden) is the executable reference path:
+
+- account creation and session cookies through `hayate-auth`;
+- identity-scoped create/edit/toggle/delete operations;
+- accessible server-rendered validation errors;
+- htmx history navigation with full-page restoration;
+- a native SSE token stream suitable for incremental AI output;
+- a self-hosted, integrity-pinned htmx 2.0.10 asset;
+- CSP, Origin/Fetch-Metadata CSRF checks, and no unsafe HTML concatenation.
+
+Run it from a fresh checkout:
+
+```sh
+uv sync --locked
+export AUTH_SECRET="$(python -c 'import secrets; print(secrets.token_urlsafe(32))')"
+uv run uvicorn examples.golden.app:app --reload
+```
+
+Then open <http://127.0.0.1:8000/login>. The
+[example README](examples/golden/README.md) includes the browser smoke command.
+Operational details live in the [authentication](docs/AUTH.md),
+[asset](docs/ASSETS.md), [compatibility](docs/COMPATIBILITY.md), and
+[release](docs/RELEASING.md) guides.
+
 ## Full-page and fragment rendering
 
 Define the complete document and its replaceable fragment as separate named
@@ -200,8 +226,15 @@ applications must still avoid concatenating untrusted strings into HTML.
 
 ```sh
 uv sync --locked
-uv run ruff check src tests typing_tests
-uv run ruff format --check src tests typing_tests
-uv run mypy src tests typing_tests
+uv run ruff check src examples tests typing_tests
+uv run ruff format --check src examples tests typing_tests
+uv run mypy src examples tests typing_tests
 uv run pytest -q
+```
+
+For the real-browser release gate:
+
+```sh
+uv run playwright install chromium
+HAYATE_HTMX_BROWSER_TESTS=1 uv run pytest -m browser -q
 ```
