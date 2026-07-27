@@ -4,6 +4,8 @@ All notable changes to hayate-htmx are documented here.
 
 ## Unreleased
 
+## [0.1.0] - 2026-07-27
+
 ### Added
 
 - Add a typed view over htmx 2 and 4 request metadata.
