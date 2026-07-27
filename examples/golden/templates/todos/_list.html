@@ -1,0 +1,24 @@
+<section id="todo-list" class="todo-list" aria-live="polite" data-filter="{{ current_filter }}">
+  <div class="list-heading">
+    <h2>
+      {% if current_filter == "done" %}
+        Completed
+      {% elif current_filter == "open" %}
+        Open tasks
+      {% else %}
+        All tasks
+      {% endif %}
+    </h2>
+    <span>{{ todos | length }} total</span>
+  </div>
+
+  {% if todos %}
+    <div class="todo-items">
+      {% for todo in todos %}
+        {% include "todos/_item.html" %}
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="empty-state">Nothing here yet. The quiet is intentional.</p>
+  {% endif %}
+</section>

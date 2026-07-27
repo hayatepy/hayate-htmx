@@ -28,9 +28,9 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
       - run: uv sync --locked
-      - run: uv run ruff check src tests typing_tests
-      - run: uv run ruff format --check src tests typing_tests
-      - run: uv run mypy src tests typing_tests
+      - run: uv run ruff check src examples tests typing_tests
+      - run: uv run ruff format --check src examples tests typing_tests
+      - run: uv run mypy src examples tests typing_tests
       - run: uv run pytest -q
       - run: uv build
 

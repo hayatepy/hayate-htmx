@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light">
+    <title>Sign in · Hayate htmx</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="/static/app.css">
+  </head>
+  <body class="auth-page">
+    <main class="auth-shell">
+      <section class="auth-intro" aria-labelledby="auth-title">
+        <p class="eyebrow">Hayate × htmx</p>
+        <h1 id="auth-title">A small full-stack app with a short mental model.</h1>
+        <p class="lede">
+          Server-rendered HTML, typed hypermedia controls, session cookies,
+          safe templates, and no frontend build step.
+        </p>
+      </section>
+
+      <section class="auth-panel" aria-label="Account access">
+        {% if error %}
+          <p class="form-error" role="alert">{{ error }}</p>
+        {% endif %}
+
+        <form action="/session/sign-up" method="post">
+          <h2>Create an account</h2>
+          <label for="sign-up-email">Email</label>
+          <input id="sign-up-email" name="email" type="email" autocomplete="email" required>
+          <label for="sign-up-password">Password</label>
+          <input
+            id="sign-up-password"
+            name="password"
+            type="password"
+            autocomplete="new-password"
+            minlength="8"
+            required
+          >
+          <button type="submit">Create account</button>
+        </form>
+
+        <div class="auth-divider" aria-hidden="true">or</div>
+
+        <form action="/session/sign-in" method="post">
+          <h2>Sign in</h2>
+          <label for="sign-in-email">Email</label>
+          <input id="sign-in-email" name="email" type="email" autocomplete="email" required>
+          <label for="sign-in-password">Password</label>
+          <input
+            id="sign-in-password"
+            name="password"
+            type="password"
+            autocomplete="current-password"
+            required
+          >
+          <button class="secondary" type="submit">Sign in</button>
+        </form>
+      </section>
+    </main>
+  </body>
+</html>

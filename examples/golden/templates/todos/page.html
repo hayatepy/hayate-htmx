@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light">
+    <meta
+      name="htmx-config"
+      content='{"historyCacheSize":10,"includeIndicatorStyles":false}'
+    >
+    <title>Tasks · Hayate htmx</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="/static/app.css">
+    <script src="/static/vendor/htmx-2.0.10.min.js" defer></script>
+    <script src="/static/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="/todos" aria-label="Hayate htmx tasks">
+        <span aria-hidden="true">速</span>
+        Hayate htmx
+      </a>
+      <div class="account">
+        <span>{{ user.email }}</span>
+        <form action="/session/sign-out" method="post">
+          <button class="text-button" type="submit">Sign out</button>
+        </form>
+      </div>
+    </header>
+
+    <main class="app-shell">
+      <section class="hero" aria-labelledby="page-title">
+        <p class="eyebrow">The hypermedia path</p>
+        <h1 id="page-title">Make the next thing obvious.</h1>
+        <p>Each interaction returns the smallest safe piece of HTML the browser needs.</p>
+      </section>
+
+      <section class="workspace" aria-label="Task workspace">
+        <form
+          id="todo-create"
+          class="create-form"
+          hx-post="/todos"
+          hx-target="#todo-list"
+          hx-swap="outerHTML"
+        >
+          <label for="new-todo">What needs doing?</label>
+          <div class="input-row">
+            <input
+              id="new-todo"
+              name="title"
+              maxlength="120"
+              aria-describedby="todo-form-errors"
+              autocomplete="off"
+              required
+            >
+            <button type="submit">Add task</button>
+          </div>
+          <div id="todo-form-errors" class="error-slot" aria-live="polite"></div>
+        </form>
+
+        <nav class="filters" aria-label="Task filters">
+          <a
+            href="/todos?filter=all"
+            hx-get="/todos?filter=all"
+            hx-target="#todo-list"
+            hx-swap="outerHTML"
+            hx-push-url="true"
+          >All</a>
+          <a
+            href="/todos?filter=open"
+            hx-get="/todos?filter=open"
+            hx-target="#todo-list"
+            hx-swap="outerHTML"
+            hx-push-url="true"
+          >Open</a>
+          <a
+            href="/todos?filter=done"
+            hx-get="/todos?filter=done"
+            hx-target="#todo-list"
+            hx-swap="outerHTML"
+            hx-push-url="true"
+          >Completed</a>
+        </nav>
+
+        {% include "todos/_list.html" %}
+      </section>
+
+      <aside class="stream-card" aria-labelledby="stream-title">
+        <div>
+          <p class="eyebrow">SSE, ready for AI output</p>
+          <h2 id="stream-title">Stream tokens without unsafe HTML.</h2>
+        </div>
+        <button id="stream-demo" class="secondary" type="button">Run stream demo</button>
+        <output id="stream-output" aria-live="polite"></output>
+      </aside>
+    </main>
+  </body>
+</html>
