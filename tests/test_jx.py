@@ -87,3 +87,55 @@ async def test_jx_reuses_catalog_and_preserves_missing_component_identity(
 
     assert renderer.catalog is catalog
     assert error.value.component_name == "missing.jx"
+
+
+async def test_jx_preserves_slots_and_component_asset_dependencies(
+    tmp_path: Path,
+) -> None:
+    root = tmp_path / "components"
+    root.mkdir()
+    (root / "page.jx").write_text(
+        """{#import "_card.jx" as Card #}
+{#def title, header, body, footer #}
+<!doctype html>
+<head>{{ assets.render() }}</head>
+<body>
+<Card title={{ title }}>
+  {% fill header %}<strong>{{ header }}</strong>{% endfill %}
+  <p>{{ body }}</p>
+  {% fill footer %}<small>{{ footer }}</small>{% endfill %}
+</Card>
+</body>""",
+        encoding="utf-8",
+    )
+    (root / "_card.jx").write_text(
+        """{#css /static/card.css #}
+{#js /static/card.js #}
+{#def title #}
+<article>
+  <h1>{{ title }}</h1>
+  <header>{% slot header %}Default header{% endslot %}</header>
+  <main>{{ content }}</main>
+  <footer>{% slot footer %}Default footer{% endslot %}</footer>
+</article>""",
+        encoding="utf-8",
+    )
+    renderer = JxRenderer(root)
+
+    html = await renderer.render(
+        "page.jx",
+        {
+            "title": "Profile",
+            "header": "<unsafe-header>",
+            "body": "<unsafe-body>",
+            "footer": "<unsafe-footer>",
+        },
+    )
+
+    assert '<link rel="stylesheet" href="/static/card.css">' in html
+    assert '<script type="module" src="/static/card.js"></script>' in html
+    assert "<strong>&lt;unsafe-header&gt;</strong>" in html
+    assert "<p>&lt;unsafe-body&gt;</p>" in html
+    assert "<small>&lt;unsafe-footer&gt;</small>" in html
+    assert "Default header" not in html
+    assert "Default footer" not in html
