@@ -5,7 +5,7 @@ build-backend = "uv_build"
 [project]
 name = "hayate-htmx"
 version = "0.1.0"
-description = "Typed htmx request and response integration for Hayate"
+description = "Full-stack hypermedia integration for Hayate and htmx"
 readme = "README.md"
 requires-python = ">=3.12"
 license = "MIT"
@@ -21,7 +21,10 @@ classifiers = [
   "Typing :: Typed",
   "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
 ]
-dependencies = ["hayate>=0.12.0"]
+dependencies = [
+  "hayate>=0.12.0",
+  "jinja2>=3.1.6,<4",
+]
 
 [project.urls]
 Repository = "https://github.com/hayatepy/hayate-htmx"
