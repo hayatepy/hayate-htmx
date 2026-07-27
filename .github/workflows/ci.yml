@@ -28,11 +28,51 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
       - run: uv sync --locked
-      - run: uv run ruff check src examples tests typing_tests
-      - run: uv run ruff format --check src examples tests typing_tests
+      - run: uv run ruff check src examples tests typing_tests scripts
+      - run: uv run ruff format --check src examples tests typing_tests scripts
       - run: uv run mypy src examples tests typing_tests
       - run: uv run pytest -q
       - run: uv build
+
+  wheel-extras:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          python-version: "3.14"
+      - run: uv build
+      - name: Verify base and optional wheel boundaries
+        run: |
+          wheel="$(find "$PWD/dist" -maxdepth 1 -type f \
+            -name 'hayate_htmx-*-py3-none-any.whl')"
+          test -f "$wheel"
+          uv run --isolated --no-project --python 3.12 \
+            --with "$wheel" python scripts/check_optional_adapters.py base
+          uv run --isolated --no-project --python 3.12 \
+            --with "$wheel[htpy]" python scripts/check_optional_adapters.py htpy
+          uv run --isolated --no-project --python 3.12 \
+            --with "$wheel[jx]" python scripts/check_optional_adapters.py jx
+          uv run --isolated --no-project --python 3.14 \
+            --with "$wheel[tdom]" python scripts/check_optional_adapters.py tdom
+
+  workerd-htpy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          python-version: "3.14"
+      - run: uv run python scripts/check_workerd_renderers.py
 
   audit-dependencies:
     runs-on: ubuntu-latest

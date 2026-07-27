@@ -4,6 +4,18 @@ All notable changes to hayate-htmx are documented here.
 
 ## Unreleased
 
+### Added
+
+- Add an engine-neutral, generic `Renderer[ViewT]` boundary while preserving
+  the existing string-based `TemplateRenderer` protocol.
+- Add optional htpy 26.x, Jx 0.11.x, and experimental Python 3.14 tdom 0.1.x
+  adapters with shared page/fragment, htmx 2/4, escaping, and response
+  contract tests.
+- Add `htpy`, `jx`, `tdom`, and environment-aware `all` package extras.
+- Pin the current Pyodide-compatible MarkupSafe wheel only on Emscripten and
+  prove htpy rendering, escaping, page/fragment selection, and response
+  headers through real workerd.
+
 ## [0.1.0] - 2026-07-27
 
 ### Added

@@ -11,6 +11,7 @@ from .response import (
 )
 from .templates import (
     HtmxTemplates,
+    Renderer,
     RenderMode,
     ResponseHeaders,
     TemplateRenderer,
@@ -28,6 +29,7 @@ __all__ = [
     "JinjaRenderer",
     "LocationValue",
     "RenderMode",
+    "Renderer",
     "RequestType",
     "ResponseHeaders",
     "TemplateNotFoundError",
