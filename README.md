@@ -12,18 +12,37 @@ standards-first Hayate core. It provides typed `HX-*` metadata, safe Jinja
 rendering, explicit page/fragment selection, and response controls that remain
 ordinary Hayate responses.
 
-> **Status: alpha (0.1.x).** htmx 2.x is the stable production contract.
-> htmx 4 request metadata is accepted additively while htmx 4 remains a
-> pre-release.
+> **Status: alpha (source version `0.2.0`).** htmx 2.x is the stable
+> production contract. htmx 4 request metadata is accepted additively while
+> htmx 4 remains a pre-release. Initial PyPI publication is tracked in
+> [issue #7](https://github.com/hayatepy/hayate-htmx/issues/7); until that
+> issue closes, the public-index install below is not available.
 
-## Install
+## Install or evaluate
 
 ```sh
 uv add hayate-htmx
 ```
 
-This installs Jinja as the batteries-included HTML renderer. Hayate itself
-remains template-engine independent.
+That command installs a published release with Jinja as the batteries-included
+HTML renderer. Hayate itself remains template-engine independent.
+
+While the initial trusted publication in
+[issue #7](https://github.com/hayatepy/hayate-htmx/issues/7) is pending, use a
+released `create-hayate` scaffold carrying the reviewed source snapshot:
+
+```sh
+uvx --refresh --from create-hayate==0.13.1 create-hayate my-app \
+  --template api --frontend htmx --renderer htpy
+```
+
+For direct library evaluation, pin the same immutable reviewed source:
+
+```sh
+uv add "hayate-htmx @ git+https://github.com/hayatepy/hayate-htmx@c133900998c487a44d40a103c52f2d469047deda"
+```
+
+Do not replace the commit with an unfixed branch name in a deployment.
 
 ## Golden full-stack application
 
