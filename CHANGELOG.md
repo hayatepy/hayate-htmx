@@ -4,14 +4,7 @@ All notable changes to hayate-htmx are documented here.
 
 ## Unreleased
 
-### Changed
-
-- Route package discovery, start, and tested-compatibility links through
-  `hayatepy.dev`, including the future PyPI project homepage.
-- Update the documented scaffold command to the released `create-hayate`
-  0.13.2.
-
-## [0.2.0] - 2026-07-27
+## [0.2.0] - 2026-07-30
 
 ### Added
 
@@ -24,6 +17,13 @@ All notable changes to hayate-htmx are documented here.
 - Pin the current Pyodide-compatible MarkupSafe wheel only on Emscripten and
   prove htpy rendering, escaping, page/fragment selection, and response
   headers through real workerd.
+
+### Changed
+
+- Route package discovery, start, and tested-compatibility links through
+  `hayatepy.dev`, including the PyPI project homepage.
+- Update the documented scaffold command to the released `create-hayate`
+  0.13.2.
 
 ## [0.1.0] - 2026-07-27
 

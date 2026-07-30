@@ -17,6 +17,16 @@ Configure a PyPI pending publisher or project publisher with:
 Protect the `pypi` environment and enable GitHub private vulnerability
 reporting.
 
+For the initial publication, preserve the immutable order:
+
+1. rerun the existing signed `v0.1.0` workflow after saving the pending
+   publisher;
+2. verify `hayate-htmx==0.1.0` from the public index;
+3. create signed `v0.2.0` only from the reviewed current main commit.
+
+Never move `v0.1.0`, and never create `v0.2.0` before the first public project
+exists.
+
 ## Release checklist
 
 1. Confirm `CHANGELOG.md` describes the release.
