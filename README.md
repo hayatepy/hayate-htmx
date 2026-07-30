@@ -1,7 +1,8 @@
 # hayate-htmx
 
-> **Hayate ecosystem:** [Start here](https://github.com/hayatepy/.github/blob/main/docs/START.md)
+> **Hayate ecosystem:** [Start here](https://hayatepy.dev/)
 > · [Hayate](https://github.com/hayatepy/hayate)
+> · [Tested compatibility](https://hayatepy.dev/evidence/compatibility/)
 > · [Frontend roadmap](https://github.com/hayatepy/roadmap/issues/10)
 
 Full-stack hypermedia integration between
@@ -32,7 +33,7 @@ While the initial trusted publication in
 released `create-hayate` scaffold carrying the reviewed source snapshot:
 
 ```sh
-uvx --refresh --from create-hayate==0.13.1 create-hayate my-app \
+uvx --refresh --from create-hayate==0.13.2 create-hayate my-app \
   --template api --frontend htmx --renderer htpy
 ```
 

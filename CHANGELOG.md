@@ -4,6 +4,13 @@ All notable changes to hayate-htmx are documented here.
 
 ## Unreleased
 
+### Changed
+
+- Route package discovery, start, and tested-compatibility links through
+  `hayatepy.dev`, including the future PyPI project homepage.
+- Update the documented scaffold command to the released `create-hayate`
+  0.13.2.
+
 ## [0.2.0] - 2026-07-27
 
 ### Added

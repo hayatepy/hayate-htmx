@@ -38,6 +38,7 @@ all = [
 ]
 
 [project.urls]
+Homepage = "https://hayatepy.dev/ecosystem/#hayate-htmx"
 Repository = "https://github.com/hayatepy/hayate-htmx"
 Documentation = "https://github.com/hayatepy/hayate-htmx#readme"
 Changelog = "https://github.com/hayatepy/hayate-htmx/blob/main/CHANGELOG.md"
