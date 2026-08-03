@@ -29,11 +29,11 @@ dependencies = [
 
 [project.optional-dependencies]
 htpy = ["htpy>=26.5,<27"]
-jx = ["jx>=0.11,<0.12"]
+jx = ["jx>=0.11,<0.13"]
 tdom = ["tdom>=0.1.18,<0.2; python_version >= '3.14'"]
 all = [
   "htpy>=26.5,<27",
-  "jx>=0.11,<0.12",
+  "jx>=0.11,<0.13",
   "tdom>=0.1.18,<0.2; python_version >= '3.14'",
 ]
 
@@ -47,7 +47,7 @@ Changelog = "https://github.com/hayatepy/hayate-htmx/blob/main/CHANGELOG.md"
 dev = [
   "hayate-auth>=0.10.0",
   "htpy>=26.5,<27",
-  "jx>=0.11,<0.12",
+  "jx>=0.11,<0.13",
   "mypy>=1.18",
   "playwright>=1.54,<2",
   "pytest>=8.3",
